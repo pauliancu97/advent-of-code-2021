@@ -72,6 +72,8 @@ def solve_part_one():
     print(get_power_rate(numbers))
 
 
+
+
 def solve_part_two():
     numbers = [line.replace('\n', '') for line in read_lines('day_three.txt')]
     print(get_life_support_rating(numbers))
