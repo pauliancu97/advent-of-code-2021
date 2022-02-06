@@ -1,3 +1,4 @@
+from __future__ import annotations
 from typing import TypeVar, Generic
 
 
@@ -30,3 +31,8 @@ class Matrix(Generic[T]):
         if len(self._values) == 0:
             return 0
         return len(self._values[0])
+
+    @classmethod
+    def with_default(cls, rows: int, cols: int, default: T) -> Matrix[T]:
+        list_matrix = [[default for _ in range(0, cols)] for _ in range(0, rows)]
+        return cls(list_matrix)
