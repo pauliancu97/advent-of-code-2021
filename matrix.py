@@ -22,6 +22,10 @@ class Matrix(Generic[T]):
     def __contains__(self, value: T) -> bool:
         return any(value in row for row in self._values)
 
+    def has_coordinates(self, coordinates: tuple[int, int]) -> bool:
+        row, col = coordinates
+        return row >= 0 and row < self.rows and col >= 0 and col < self.cols
+
     @property
     def rows(self) -> int:
         return len(self._values)
