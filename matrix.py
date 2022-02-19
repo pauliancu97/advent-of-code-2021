@@ -26,6 +26,22 @@ class Matrix(Generic[T]):
         row, col = coordinates
         return row >= 0 and row < self.rows and col >= 0 and col < self.cols
 
+    def __str__(self) -> str:
+        string = ''
+        for row in range(0, self.rows):
+            for col in range(0, self.cols):
+                string += str(self[row, col])
+            string += '\n'
+        return string
+
+    def __repr__(self) -> str:
+        string = ''
+        for row in range(0, self.rows):
+            for col in range(0, self.cols):
+                string += str(self[row, col])
+            string += '\n'
+        return string
+
     @property
     def rows(self) -> int:
         return len(self._values)
