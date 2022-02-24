@@ -1,5 +1,6 @@
 from __future__ import annotations
-from typing import TypeVar, Generic
+from typing import Optional, TypeVar, Generic
+from copy import deepcopy
 
 
 T = TypeVar('T')
@@ -41,6 +42,38 @@ class Matrix(Generic[T]):
                 string += str(self[row, col])
             string += '\n'
         return string
+
+    def reversed_rows(self) -> Matrix[T]:
+        result = deepcopy(self)
+        for row in range(0, self.rows):
+            for col in range(0, self.cols):
+                result[row, col] = self[self.rows - row - 1, col]
+        return result
+
+    def reversed_cols(self) -> Matrix[T]:
+        result = deepcopy(self)
+        for row in range(0, self.rows):
+            for col in range(0, self.cols):
+                result[row, col] = self[row , self.cols - col - 1]
+        return result
+
+    def splitted_horizontally(self, start_row: int, end_row: Optional[int] = None) -> Matrix[T]:
+        actual_end_row = self.rows if end_row is None else end_row
+        splitted_rows = actual_end_row - start_row
+        result = Matrix[T].with_default(splitted_rows, self.cols, self[0, 0])
+        for row in range(0, result.rows):
+            for col in range(0, result.cols):
+                result[row, col] = self[row + start_row, col]
+        return result
+
+    def splitted_vertically(self, start_col: int, end_col: Optional[int] = None) -> Matrix[T]:
+        actual_end_col = self.cols if end_col is None else end_col
+        splitted_cols = actual_end_col - start_col
+        result = Matrix[T].with_default(self.rows, splitted_cols, self[0, 0])
+        for row in range(0, result.rows):
+            for col in range(0, result.cols):
+                result[row, col] = self[row, col + start_col]
+        return result
 
     @property
     def rows(self) -> int:
