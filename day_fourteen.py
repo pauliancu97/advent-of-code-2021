@@ -1,6 +1,9 @@
+from copy import copy
 from re import compile as regex_compile
 from typing import Optional
 from utils import read_lines
+from string import ascii_uppercase
+from collections import Counter
 
 
 REACTION_REGEX = regex_compile(r'([A-Z])([A-Z]) -> ([A-Z])')
@@ -43,12 +46,36 @@ def get_input(path: str) -> tuple[str, ReactionsTable]:
     return polymer, reactions_table
 
 
+def get_answer_part_two(polymer: str, reactions_table: ReactionsTable, num_steps: int) -> int:
+    pairs = zip(polymer[:-1], polymer[1:])
+    pair_counter = Counter(pairs)
+    for _ in range(num_steps):
+        updated_pair_counter: Counter[tuple[str, str]] = Counter()
+        for pair, frequency in pair_counter.items():
+            first_pair = (pair[0], reactions_table[pair])
+            second_pair = (reactions_table[pair], pair[1])
+            updated_pair_counter[first_pair] += frequency
+            updated_pair_counter[second_pair] += frequency
+        pair_counter = updated_pair_counter
+    letter_counter = Counter({letter: 0 for letter in ascii_uppercase})
+    for pair, frequency in pair_counter.items():
+        letter_counter[pair[1]] += frequency
+    key = list(pair_counter.keys())[0][0]
+    letter_counter[key] += 1
+    frequencies = [value for value in letter_counter.values() if value > 0]
+    return max(frequencies) - min(frequencies)
+
+
 def solve_day_one() -> None:
     polymer, reactions_table = get_input('day_fourteen.txt')
     final_polymer = get_polymer_after_iterations(polymer, reactions_table, 10)
     print(get_answer(final_polymer))
 
 
+def solve_day_two() -> None:
+    polymer, reactions_table = get_input('day_fourteen.txt')
+    print(get_answer_part_two(polymer, reactions_table, 40))
+
 
 if __name__ == '__main__':
-    solve_day_one()
+    solve_day_two()
