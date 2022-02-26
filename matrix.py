@@ -6,6 +6,8 @@ from copy import deepcopy
 T = TypeVar('T')
 
 
+FOUR_DIRECTIONS = [(-1, 0), (0, 1), (1, 0), (0, -1)]
+
 class Matrix(Generic[T]):
     
     def __init__(self, values: list[list[T]]) -> None:
@@ -26,6 +28,10 @@ class Matrix(Generic[T]):
     def has_coordinates(self, coordinates: tuple[int, int]) -> bool:
         row, col = coordinates
         return row >= 0 and row < self.rows and col >= 0 and col < self.cols
+
+    def get_neighbours(self, coordinate: tuple[int, int]) -> list[tuple[int, int]]:
+        row, col = coordinate
+        return [(row + row_offset, col + col_offset) for row_offset, col_offset in FOUR_DIRECTIONS if self.has_coordinates((row + row_offset, col + col_offset))]
 
     def __str__(self) -> str:
         string = ''
