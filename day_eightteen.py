@@ -1,4 +1,5 @@
 from __future__ import annotations
+from copy import deepcopy
 from dataclasses import dataclass
 from functools import reduce
 from math import ceil, floor
@@ -177,9 +178,9 @@ def get_reduced(node: Element) -> Element:
 
 
 def get_added(first: Element, second: Element) -> Element:
-    temp = Pair(first, second)
-    first.parent = temp
-    second.parent = temp
+    temp = Pair(deepcopy(first), deepcopy(second))
+    temp.first.parent = temp
+    temp.second.parent = temp
     return get_reduced(temp)
 
 
@@ -199,6 +200,11 @@ def solve_part_one() -> None:
     result_element = reduce(lambda acc, x: get_added(acc, x), elements)
     print(get_magnitude(result_element))
 
+def solve_part_two() -> None:
+    lines = read_lines('day_eightteen.txt')
+    elements = [get_element(line) for line in lines]
+    result = max(get_magnitude(get_added(first, second)) for first_index, first in enumerate(elements) for second_index, second in enumerate(elements) if first_index != second_index)
+    print(result)
 
 if __name__ == '__main__':
-    solve_part_one()
+    solve_part_two()
